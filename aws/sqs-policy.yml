@@ -28,9 +28,7 @@ Resources:
             Resource: !Ref QueueArn
             Condition:
               "StringEquals":
-                "aws:ResourceTag/Project":
-                  - "oslo"
-                  - "helsinki"
+                "aws:ResourceTag/Project": "oslo"
           - Effect: Allow
             Principal:
               AWS: !Ref RoleArn
