@@ -23,12 +23,15 @@ Resources:
         Version: "2012-10-17"
         Statement:
           - Effect: Allow
-            Principal: "*"
+            Principal:
+              AWS: "*"
             Action: "SQS:SendMessage"
             Resource: !Ref QueueArn
             Condition:
-              "StringEquals":
-                "aws:ResourceTag/Project": "oslo"
+              StringEquals:
+                aws:PrincipalTag/Project:
+                  - "oslo"
+                  - "helsinki"
           - Effect: Allow
             Principal:
               AWS: !Ref RoleArn
