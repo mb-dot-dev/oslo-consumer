@@ -140,6 +140,23 @@ jobs:
         RoleName=${{ needs.prepare.outputs.project_name }}-lambda
       project: ${{ needs.prepare.outputs.project_name }}
     secrets: inherit
+  
+  deploy-sqs-queue-policy:
+    name: Deploy SQS Queue Policy
+    needs:
+      - prepare
+      - deploy-sqs
+      - deploy-iam-role
+    uses: mb-dot-dev/reusable-workflows/.github/workflows/deploy-cloudformation.yaml@main
+    with:
+      stack-name: ${{ needs.prepare.outputs.project_name }}-sqs-policy
+      template: aws/sqs-policy.yml
+      parameter-overrides: >-
+        QueueArn=${{ fromJSON(needs.deploy-sqs.outputs.stack-outputs-json).QueueArn }},
+        QueueUrl=${{ fromJSON(needs.deploy-sqs.outputs.stack-outputs-json).QueueUrl }},
+        RoleArn=${{ fromJSON(needs.deploy-iam-role.outputs.stack-outputs-json).LambdaExecutionRoleArn }}
+      project: ${{ needs.prepare.outputs.project_name }}
+    secrets: inherit
 
   deploy-lambda:
     name: Deploy Lambda

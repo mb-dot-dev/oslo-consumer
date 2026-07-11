@@ -1,0 +1,41 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: CloudFormation template for SQS queue policy
+
+Parameters:
+  QueueArn:
+    Type: String
+    Description: ARN of the SQS queue
+  QueueUrl:
+    Type: String
+    Description: URL of the SQS queue
+  RoleArn:
+    Type: String
+    Description: ARN of the consumer IAM role
+
+Resources:
+  SQSQueuePolicy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      Queues:
+        - !Ref QueueUrl
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal: "*"
+            Action: "SQS:SendMessage"
+            Resource: !Ref QueueArn
+            Condition:
+              "StringEquals":
+                "aws:ResourceTag/Project":
+                  - "oslo"
+                  - "helsinki"
+          - Effect: Allow
+            Principal:
+              AWS: !Ref RoleArn
+            Action:
+              - "SQS:ReceiveMessage"
+              - "SQS:DeleteMessage"
+              - "SQS:GetQueueAttributes"
+            Resource: !Ref QueueArn
