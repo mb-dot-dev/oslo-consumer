@@ -54,3 +54,18 @@ jobs:
       project: ${{ needs.prepare.outputs.project_name }}
       parameter-overrides: >-
         ProjectName=${{ needs.prepare.outputs.project_name }}
+
+  deploy-sqs:
+    name: Deploy SQS Queue
+    needs:
+      - prepare
+      - cfn-lint
+    uses: mb-dot-dev/reusable-workflows/.github/workflows/deploy-cloudformation.yaml@main
+    with:
+      stack-name: ${{ needs.prepare.outputs.project_name }}-sqs
+      template: aws/sqs.yml
+      parameter-overrides: >-
+        ProjectName=${{ needs.prepare.outputs.project_name }},
+        QueueName=${{ needs.prepare.outputs.project_name }}-queue
+      project: ${{ needs.prepare.outputs.project_name }}
+    secrets: inherit
