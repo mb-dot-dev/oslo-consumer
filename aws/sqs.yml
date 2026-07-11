@@ -17,18 +17,18 @@ Parameters:
 Outputs:
   QueueArn:
     Description: ARN of the SQS queue
-    Value: !GetAtt SampleSQSQueue.Arn
+    Value: !GetAtt HttpEventsQueue.Arn
 
   QueueUrl:
     Description: URL of the SQS queue
-    Value: !Ref SampleSQSQueue
+    Value: !Ref HttpEventsQueue
 
   QueueName:
     Description: Name of the SQS queue
-    Value: !GetAtt SampleSQSQueue.QueueName
+    Value: !GetAtt HttpEventsQueue.QueueName
 
 Resources:
-  SampleSQSQueue:
+  HttpEventsQueue:
     Type: AWS::SQS::Queue
     Properties:
       QueueName: !Ref QueueName
@@ -42,3 +42,10 @@ Resources:
           Value: !Ref QueueName
 
 
+  HttpEventsQueueUrlParameter:
+    Type: "AWS::SSM::Parameter"
+    Properties:
+      Name: !Sub "/sqs/${ProjectName}/queue-url"
+      Type: "String"
+      Value: !Ref HttpEventsQueue
+      Description: "URL of the SQS queue"
