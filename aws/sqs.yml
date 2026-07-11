@@ -49,3 +49,11 @@ Resources:
       Type: "String"
       Value: !Ref HttpEventsQueue
       Description: "URL of the SQS queue"
+
+  HttpEventsQueueArnParameter:
+    Type: "AWS::SSM::Parameter"
+    Properties:
+      Name: !Sub "/sqs/${ProjectName}/queue-arn"
+      Type: "String"
+      Value: !GetAtt HttpEventsQueue.Arn
+      Description: "ARN of the SQS queue"
